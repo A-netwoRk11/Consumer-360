@@ -1,7 +1,9 @@
 # Consumer360 - Flask Data Analytics Dashboard
 
 Consumer360 is a Flask-based analytics dashboard for retail customer intelligence.
-It combines KPI tracking, RFM segmentation, sales trends, and cohort retention into a clean multi-page web app.
+It combines KPI tracking, RFM segmentation, sales trends, and cohort retention into a clean multi-page web app. 
+
+##https://consumer-360.onrender.com/
 
 ## What It Solves
 
