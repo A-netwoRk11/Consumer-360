@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Trends - Consumer360{% endblock %}
+
+{% block extra_style %}
+    <style>
+        .chart-container {
+            margin: 2rem 0;
+        }
+        .chart-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h2>Sales Trends</h2>
+    <p style="color: #666; margin-bottom: 1.5rem;">
+        Monthly revenue analysis from your retail transactions.
+    </p>
+    
+    <div class="chart-container">
+        {% if sales_trend_image %}
+            <img src="{{ sales_trend_image }}" alt="Sales Trend Chart" class="chart-image">
+        {% else %}
+            <p style="color: #999; text-align: center; padding: 2rem;">Sales trend chart not available. Please run the pipeline first.</p>
+        {% endif %}
+    </div>
+    
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid #eee;">
+    
+    <h3 style="color: #667eea; margin: 1.5rem 0 1rem 0;">Insights</h3>
+    <ul style="color: #666; line-height: 1.8; margin-left: 1.5rem;">
+        <li>Track monthly revenue patterns and seasonal trends.</li>
+        <li>Identify peak sales periods for targeted campaigns.</li>
+        <li>Monitor year-over-year growth and performance.</li>
+    </ul>
+{% endblock %}

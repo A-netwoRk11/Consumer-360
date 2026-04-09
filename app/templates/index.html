@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Consumer360{% endblock %}
+
+{% block content %}
+    <section id="dashboard" class="section">
+        <h2>Analytics Overview</h2>
+        <p>Track business performance, segment behavior, and retention trends in one view.</p>
+
+        <form method="get" action="/" class="filter-panel" style="margin-top: 1rem;">
+            <div class="filter-grid">
+                <label class="filter-field">
+                    <span>Start date</span>
+                    <input type="date" name="start_date" value="{{ selected_start_date }}">
+                </label>
+                <label class="filter-field">
+                    <span>End date</span>
+                    <input type="date" name="end_date" value="{{ selected_end_date }}">
+                </label>
+                <label class="filter-field">
+                    <span>Customer segment</span>
+                    <select name="segment">
+                        <option value="">All segments</option>
+                        {% for segment in available_segments %}
+                            <option value="{{ segment }}" {% if selected_segment == segment %}selected{% endif %}>{{ segment }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label class="filter-field">
+                    <span>Country</span>
+                    <select name="country">
+                        <option value="">All countries</option>
+                        {% for country in available_countries %}
+                            <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>{{ country }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-primary">Apply Filters</button>
+                <a href="/" class="btn-secondary">Reset</a>
+            </div>
+        </form>
+
+        <div class="kpi-grid" style="margin-top: 1.1rem;">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Revenue</div>
+                <div class="kpi-value">${{ total_revenue }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Customers</div>
+                <div class="kpi-value">{{ total_customers }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Average Order Value</div>
+                <div class="kpi-value">${{ average_order_value }}</div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <section id="segments" class="section">
+        <div class="section-title">Segments</div>
+        <div class="segment-grid">
+            <article class="segment-card">
+                <div class="segment-name">Champions</div>
+                <div class="segment-value">{{ segment_counts.get('Champions', 0) }}</div>
+            </article>
+            <article class="segment-card">
+                <div class="segment-name">Loyal Customers</div>
+                <div class="segment-value">{{ segment_counts.get('Loyal Customers', 0) }}</div>
+            </article>
+            <article class="segment-card">
+                <div class="segment-name">At Risk</div>
+                <div class="segment-value">{{ segment_counts.get('At Risk', 0) }}</div>
+            </article>
+            <article class="segment-card">
+                <div class="segment-name">Hibernating</div>
+                <div class="segment-value">{{ segment_counts.get('Hibernating', 0) }}</div>
+            </article>
+        </div>
+
+        <div class="panel">
+            {% if rfm_chart_image %}
+                <img src="{{ rfm_chart_image }}" alt="RFM segment distribution" class="chart-image">
+            {% else %}
+                <div class="empty-state">RFM chart is not available yet. Generate rfm_segments.csv to populate this section.</div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="sales" class="section">
+        <div class="section-title">Sales</div>
+        <div class="panel">
+            {% if sales_chart_image %}
+                <img src="{{ sales_chart_image }}" alt="Monthly revenue trend" class="chart-image">
+            {% else %}
+                <div class="empty-state">Sales chart is not available yet. Generate cleaned_transactions.csv to populate this section.</div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="cohort" class="section">
+        <div class="section-title">Cohort</div>
+        <div class="panel">
+            {% if cohort_chart_image %}
+                <img src="{{ cohort_chart_image }}" alt="Cohort retention heatmap" class="chart-image">
+            {% else %}
+                <div class="empty-state">Cohort heatmap not found. Run cohort analysis to display retention patterns here.</div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

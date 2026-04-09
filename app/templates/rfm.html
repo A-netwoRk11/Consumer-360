@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}RFM Segmentation - Consumer360{% endblock %}
+
+{% block extra_style %}
+    <style>
+        .chart-container {
+            margin: 2rem 0;
+        }
+        .chart-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .segment-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .segment-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .segment-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .segment-count {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h2>RFM Segmentation</h2>
+    <p style="color: #666; margin-bottom: 1.5rem;">
+        RFM (Recency, Frequency, Monetary) analysis segments customers into groups based on their purchasing behavior.
+        Total customers analyzed: <strong>{{ total_customers }}</strong>
+    </p>
+    
+    <div class="chart-container">
+        {% if rfm_chart_image %}
+            <img src="{{ rfm_chart_image }}" alt="RFM Segmentation Chart" class="chart-image">
+        {% else %}
+            <p style="color: #999; text-align: center; padding: 2rem;">RFM chart not available. Please run the pipeline first.</p>
+        {% endif %}
+    </div>
+    
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid #eee;">
+    
+    <h3 style="color: #667eea; margin: 1.5rem 0 1rem 0;">Segment Distribution</h3>
+    <div class="segment-chart">
+        {% for segment, count in segments.items() %}
+            <div class="segment-bar">
+                <div class="segment-name">{{ segment }}</div>
+                <div class="segment-count">{{ count }}</div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">{{ (count / total_customers * 100)|round(1) }}%</div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid #eee;">
+    
+    <h3 style="color: #667eea; margin: 1.5rem 0 1rem 0;">Sample RFM Scores</h3>
+    <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">Displaying first 20 customers with their RFM metrics and segment classification.</p>
+    
+    {% if rfm_sample %}
+        <table>
+            <thead>
+                <tr>
+                    <th>CustomerID</th>
+                    <th>Recency (days)</th>
+                    <th>Frequency</th>
+                    <th>Monetary ($)</th>
+                    <th>Segment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in rfm_sample %}
+                    <tr>
+                        <td>{{ record.get('CustomerID', 'N/A')|int }}</td>
+                        <td>{{ record.get('Recency', 'N/A') }}</td>
+                        <td>{{ record.get('Frequency', 'N/A') }}</td>
+                        <td>${{ "%.2f"|format(record.get('Monetary', 0)) }}</td>
+                        <td><strong>{{ record.get('Segment', 'N/A') }}</strong></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #999;">No RFM data available. Please run the pipeline first.</p>
+    {% endif %}
+{% endblock %}
